@@ -74,10 +74,10 @@ const createIndices = (
     table.index([value])
   } else if (Array.isArray(value)) {
     if (value.every(isString)) {
-      table.index(value as string[])
+      table.index(value)
     }
 
-    value.forEach(columns => table.index(columns as string[]))
+    value.forEach(columns => table.index(columns))
   } else if (isObject(value)) {
     for (const [indexName, columns] of Object.entries(value)) {
       table.index(toArray(columns), indexName)
@@ -383,7 +383,7 @@ export class Cast <
     }
 
     return mapObj(object, (value, column) => {
-      return this.deserializeColumn(column, value, options) as any
+      return this.deserializeColumn(column, value, options)
     })
   }
 
@@ -402,7 +402,7 @@ export class Cast <
     const definition = this.model.schema[column]
     invariant(
       !(definition.notNullable && value == null),
-      `${this.model.name}.${column} is not nullable but received nil`
+      `${this.model.name}.${String(column)} is not nullable but received nil`
     )
 
     const type = getDataType(definition)
